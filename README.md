@@ -1,7 +1,7 @@
 # SmartReg Monitor — Ricoh Edition 🚀
 
 > **Trabajo de Fin de Máster Corporativo (TFM)** desarrollado para **Ricoh España**.
-> Un asistente de cumplimiento legal (RAG Chatbot) para consultar y monitorizar normativa europea (RGPD, AI Act, NIS2) e Inteligencia Artificial de forma interactiva y en tiempo real.
+> Un asistente de cumplimiento legal (RAG Chatbot) para consultar y monitorizar normativa europea (RGPD, AI Act, NIS2) de forma interactiva y en tiempo real.
 
 ---
 
@@ -14,9 +14,8 @@ Este repositorio contiene la base de código completa del proyecto **SmartReg Mo
    - Subida y vinculación exitosa con la rama principal `main` en [GitHub](https://github.com/boorjanunezz/TFM-Ricoh).
 2. **Saneamiento de Seguridad y Credenciales**:
    - Se detectó y saneó por completo el archivo `notebooks/ingesta.ipynb`, el cual contenía claves API hardcodeadas. Se reemplazaron por variables de entorno seguras (`os.environ.get`), asegurando que ningún secreto del proyecto sea filtrado en el repositorio público.
-3. **Automatización de Inteligencia de Mercado (Colector Diario de Noticias)**:
-   - Se diseñó e implementó un script colector de noticias autónomo (`app/news_collector.py`) que recopila noticias frescas sobre Inteligencia Artificial diariamente de forma gratuita a través de RSS sin necesidad de API keys.
-   - Se configuró una pipeline serverless autónoma mediante **GitHub Actions** (`.github/workflows/daily_news_collector.yml`) que ejecuta el script todos los días, genera sus embeddings a través de Azure OpenAI y los indexa automáticamente en Supabase para que el RAG siempre esté actualizado.
+3. **Optimización de Configuración**:
+   - Actualización del archivo de plantilla `app/.env.example` para incluir los placeholders correspondientes de **Azure Document Intelligence** (`DOC_INTELLIGENCE_ENDPOINT` y `DOC_INTELLIGENCE_KEY`), evitando posibles fallos de arranque por falta de configuración.
 
 ---
 
@@ -49,14 +48,11 @@ SmartReg Monitor implementa una arquitectura **Medallion** para procesar y consu
 
 ```
 tfm-ricoh/
-├── .github/workflows/
-│   └── daily_news_collector.yml # Workflow de automatización diaria de noticias (GitHub Actions)
 ├── .vscode/                     # Configuraciones compartidas del espacio de trabajo de VS Code
 ├── app/                         # Aplicación principal del chatbot
 │   ├── .env.example             # Plantilla de configuración de variables de entorno
 │   ├── app.py                   # Lógica e interfaz del Chatbot (Chainlit)
 │   ├── data_layer.py            # Capa de datos para historial en Supabase
-│   ├── news_collector.py        # Colector e indexador automático de noticias de IA
 │   ├── registrar_usuario.py     # Script CLI para dar de alta usuarios autorizados
 │   ├── requirements.txt         # Dependencias Python de la aplicación
 │   └── public/                  # Hojas de estilo personalizadas e imágenes
@@ -115,28 +111,3 @@ Arranca el servidor local de Chainlit:
 chainlit run app/app.py
 ```
 Abre tu navegador en `http://localhost:8000` e inicia sesión con el usuario creado.
-
----
-
-## 🤖 Colector Automático de Noticias de IA
-
-Para mantener al asistente de cumplimiento legal al día sobre los últimos avances normativos, de mercado y tecnológicos en materia de IA, el sistema recopila noticias todos los días de manera autónoma.
-
-### ¿Cómo funciona?
-1. **Google News RSS (Free & Free-Key)**: Descarga periódicamente los últimos encabezados e introducciones en español sobre *"Inteligencia Artificial"*.
-2. **Generación de Embeddings**: Pasa los resúmenes por el modelo `text-embedding-3-small` de tu recurso Azure OpenAI.
-3. **Indexación Unificada**: Guarda los artículos en la misma tabla de vectores `legal_chunks` de Supabase bajo el documento `"Noticias IA"`.
-4. **Respuesta Transparente**: Al preguntar en el chat de SmartReg Monitor (por ejemplo: *"¿Cuáles son las últimas noticias de IA hoy?"*), el RAG recuperará y citará estas noticias automáticamente.
-
-### Automatización en GitHub Actions (Paso a Paso)
-Para que el proceso corra gratis todas las mañanas en los servidores de GitHub sin necesidad de que dejes tu ordenador encendido:
-
-1. Ve a tu repositorio en GitHub: **https://github.com/boorjanunezz/TFM-Ricoh**.
-2. Entra en **Settings** (Configuración) > **Secrets and variables** > **Actions**.
-3. Haz clic en **New repository secret** y añade las siguientes credenciales necesarias con los mismos valores de tu archivo `.env`:
-   - `AZURE_OPENAI_API_KEY`
-   - `AZURE_OPENAI_ENDPOINT`
-   - `SUPABASE_URL`
-   - `SUPABASE_KEY`
-4. *(Opcional)* Si tus modelos usan despliegues con nombres personalizados, añade también variables para `AZURE_EMBEDDING_DEPLOYMENT` y `AZURE_OPENAI_API_VERSION`.
-5. ¡Listo! La tubería se disparará de manera programada todos los días a las **06:00 UTC (08:00 AM hora española)** y también puedes forzar su ejecución manual y ver los logs en la pestaña **Actions** de GitHub seleccionando el workflow *"Daily AI News Collector"*.
