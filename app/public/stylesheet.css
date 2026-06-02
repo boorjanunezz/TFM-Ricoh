@@ -1,0 +1,68 @@
+/* SmartReg Monitor — Estilos personalizados */
+
+/* Fuente general */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* Mensaje de bienvenida */
+.markdown-body h1 {
+    color: #3b82f6;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 0.4em;
+}
+
+/* Estilo de las tablas en el welcome */
+.markdown-body table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.markdown-body th {
+    background-color: #1e3a5f;
+    color: white;
+    padding: 10px 14px;
+}
+
+.markdown-body td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #2d3748;
+}
+
+/* Botón de enviar */
+button[data-testid="submit-button"] {
+    background-color: #2563eb !important;
+    border-radius: 8px !important;
+}
+
+button[data-testid="submit-button"]:hover {
+    background-color: #1d4ed8 !important;
+}
+
+/* Input del chat */
+textarea {
+    border-radius: 12px !important;
+}
+
+/* Mensajes del asistente */
+.message-assistant .message-content {
+    border-left: 3px solid #3b82f6;
+    padding-left: 12px;
+}
+
+/* Blockquote (aviso legal) */
+.markdown-body blockquote {
+    border-left: 4px solid #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    padding: 8px 16px;
+    border-radius: 0 8px 8px 0;
+}
+
+
+img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-select: none;
+}

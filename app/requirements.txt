@@ -1,0 +1,9 @@
+chainlit
+openai
+supabase
+pdfplumber
+azure-functions
+azure-ai-documentintelligence
+azure-storage-blob
+python-dotenv
+bcrypt
